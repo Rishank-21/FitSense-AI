@@ -28,4 +28,20 @@ API.interceptors.request.use(
   }
 );
 
+// Response Interceptor to handle token expiration/invalidity
+API.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem('fitsense_token');
+      // Only redirect if they are not already on public authentication/landing routes
+      const path = window.location.pathname;
+      if (path !== '/login' && path !== '/register' && path !== '/') {
+        window.location.href = '/login';
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default API;

@@ -1,5 +1,7 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config');
+const mongoose = require('mongoose');
+const { isFallback } = require('../db');
 
 module.exports = function (req, res, next) {
   // Get token from header
@@ -15,6 +17,13 @@ module.exports = function (req, res, next) {
 
   try {
     const decoded = jwt.verify(token, config.JWT_SECRET);
+    
+    // Safeguard: Reject tokens with invalid MongoDB ObjectIds if MongoDB is connected,
+    // which forces the client to re-login and obtain a fresh valid token.
+    if (decoded && decoded.id && !isFallback() && !mongoose.Types.ObjectId.isValid(decoded.id)) {
+      return res.status(401).json({ message: 'Session expired. Please log in again.' });
+    }
+    
     req.user = decoded;
     next();
   } catch (err) {

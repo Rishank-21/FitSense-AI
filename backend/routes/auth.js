@@ -201,6 +201,7 @@ router.get('/users', auth, async (req, res) => {
       return res.status(403).json({ message: 'Access denied. Admin privileges required.' });
     }
     const users = await User.find({});
+    console.log(`Fetched ${users.length} users for admin dashboard.`);
     const cleanedUsers = users.map(u => {
       const uRes = typeof u.toObject === 'function' ? u.toObject() : { ...u };
       delete uRes.password;

@@ -18,9 +18,14 @@ module.exports = function (req, res, next) {
   try {
     const decoded = jwt.verify(token, config.JWT_SECRET);
     
+    console.log(`[AUTH DEBUG] Token User ID: "${decoded?.id}"`);
+    console.log(`[AUTH DEBUG] Database Fallback Active: ${isFallback()}`);
+    console.log(`[AUTH DEBUG] Is ID a valid MongoDB ObjectId: ${mongoose.Types.ObjectId.isValid(decoded?.id)}`);
+    
     // Safeguard: Reject tokens with invalid MongoDB ObjectIds if MongoDB is connected,
     // which forces the client to re-login and obtain a fresh valid token.
     if (decoded && decoded.id && !isFallback() && !mongoose.Types.ObjectId.isValid(decoded.id)) {
+      console.warn(`[AUTH WARNING] Rejected stale non-ObjectId token: ${decoded.id}`);
       return res.status(401).json({ message: 'Session expired. Please log in again.' });
     }
     

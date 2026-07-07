@@ -73,7 +73,8 @@ const WorkoutSession = () => {
     setAiSummary('');
     
     // Connect to Socket.io backend
-    socketRef.current = io('http://127.0.0.1:5000');
+    const socketUrl = import.meta.env.VITE_SOCKET_URL || API.defaults.baseURL.replace(/\/api$/, '') || 'http://127.0.0.1:5000';
+    socketRef.current = io(socketUrl);
     
     socketRef.current.on('connect', () => {
       console.log('Connected to socket gateway');

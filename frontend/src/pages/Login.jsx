@@ -8,6 +8,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const { login, error, setError } = useAuth();
   const [localLoading, setLocalLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {

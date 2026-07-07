@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "_id": "t0zkordrz",
+    "createdAt": "2026-07-07T09:48:00.532Z",
+    "name": "FitSense Admin",
+    "email": "admin@fitsense.ai",
+    "password": "$2a$10$Rpnw0c7pEYD1HzfMH57QJujLjSbon2QzEqObWHaCRaA.8cQQ55Fr6",
+    "height": 180,
+    "weight": 75,
+    "age": 30,
+    "gender": "other",
+    "fitnessGoal": "maintenance",
+    "role": "admin"
+  }
+]

@@ -172,8 +172,12 @@ const mockDb = {
 const connectDB = async () => {
   try {
     mongoose.set('strictQuery', false);
+    // Disable command buffering globally so queries fail fast if connection hangs
+    mongoose.set('bufferCommands', false);
+    
     await mongoose.connect(MONGO_URI, {
-      serverSelectionTimeoutMS: 2000,
+      serverSelectionTimeoutMS: 3000,
+      connectTimeoutMS: 3000,
     });
     console.log('MongoDB Connected successfully.');
     isUsingFallback = false;
@@ -186,6 +190,6 @@ const connectDB = async () => {
 
 module.exports = {
   connectDB,
-  isFallback: () => isUsingFallback,
+  isFallback: () => isUsingFallback || mongoose.connection.readyState === 0,
   getFallbackModel: (name) => mockDb[name],
 };

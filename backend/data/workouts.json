@@ -1,1 +1,86 @@
-[]
+[
+  {
+    "_id": "6a54d0d0dc952bcb06cfceaf",
+    "createdAt": "2026-07-13T11:49:36.486Z",
+    "userId": "6a54cfb7dc952bcb06cfcead",
+    "exercise": "running (sim)",
+    "duration": 217,
+    "reps": 102,
+    "goalReps": 100,
+    "calories": 40.7,
+    "avgHeartRate": 145,
+    "peakHeartRate": 149,
+    "avgBreathingRate": 29,
+    "status": "completed"
+  },
+  {
+    "_id": "6a54d13d8cd8ecb0e5ed2801",
+    "createdAt": "2026-07-13T11:51:25.052Z",
+    "userId": "6a54cfb7dc952bcb06cfcead",
+    "exercise": "push-ups",
+    "duration": 52,
+    "reps": 16,
+    "goalReps": 15,
+    "calories": 8.08,
+    "avgHeartRate": 93,
+    "peakHeartRate": 112,
+    "avgBreathingRate": 21,
+    "status": "completed"
+  },
+  {
+    "_id": "6a54d19a65f8a29d6fbce39b",
+    "createdAt": "2026-07-13T11:52:58.047Z",
+    "userId": "6a54cdc816a5516e74a81470",
+    "exercise": "squats",
+    "duration": 120,
+    "reps": 15,
+    "goalReps": 20,
+    "calories": 30,
+    "avgHeartRate": 110,
+    "peakHeartRate": 120,
+    "avgBreathingRate": 18,
+    "status": "completed"
+  },
+  {
+    "_id": "6a54d221f42fe00b0b6523c8",
+    "createdAt": "2026-07-13T11:55:13.902Z",
+    "userId": "6a54cdc816a5516e74a81470",
+    "exercise": "squats",
+    "duration": 15,
+    "reps": 3,
+    "goalReps": 20,
+    "calories": 1.35,
+    "avgHeartRate": 78,
+    "peakHeartRate": 83,
+    "avgBreathingRate": 17,
+    "status": "abandoned"
+  },
+  {
+    "_id": "6a54d2ac67f3fd2528d07a33",
+    "createdAt": "2026-07-13T11:57:32.713Z",
+    "userId": "6a54cdc816a5516e74a81470",
+    "exercise": "squats",
+    "duration": 15,
+    "reps": 3,
+    "goalReps": 20,
+    "calories": 1.4,
+    "avgHeartRate": 78,
+    "peakHeartRate": 83,
+    "avgBreathingRate": 18,
+    "status": "abandoned"
+  },
+  {
+    "_id": "6a54d48367f3fd2528d07a37",
+    "createdAt": "2026-07-13T12:05:23.565Z",
+    "userId": "6a54cfb7dc952bcb06cfcead",
+    "exercise": "squats",
+    "duration": 7,
+    "reps": 1,
+    "goalReps": 20,
+    "calories": 0.55,
+    "avgHeartRate": 74,
+    "peakHeartRate": 76,
+    "avgBreathingRate": 17,
+    "status": "abandoned"
+  }
+]

@@ -46,9 +46,6 @@ You can write a custom question or click **Generate Custom Training Plan** above
     setLoading(true);
 
     try {
-      // Call Gemini router endpoint
-      // We map standard text to the posture advice API if they ask about form, 
-      // otherwise use general generate API helper
       const res = await API.post('/ai/posture', {
         exercise: user?.fitnessGoal || 'general fitness',
         poseHistory: [text]

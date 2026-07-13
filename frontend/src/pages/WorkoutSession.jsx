@@ -14,7 +14,8 @@ import {
   ChevronRight, 
   CheckCircle,
   HelpCircle,
-  Brain
+  Brain,
+  ShieldAlert
 } from 'lucide-react';
 
 const EXERCISES = [
@@ -128,24 +129,33 @@ const WorkoutSession = () => {
     socketRef.current = null;
     setIsActive(false);
 
+    const workoutLog = {
+      exercise: selectedEx.name,
+      duration: telemetry.duration,
+      reps: telemetry.reps,
+      goalReps: goal,
+      calories: telemetry.calories,
+      avgHeartRate: telemetry.avgHeartRate,
+      peakHeartRate: telemetry.peakHeartRate,
+      avgBreathingRate: telemetry.avgBreathingRate,
+      status: telemetry.reps >= goal ? 'completed' : 'abandoned'
+    };
+
     // Save workout logs to MongoDB
     try {
-      const workoutLog = {
-        exercise: selectedEx.name,
-        duration: telemetry.duration,
-        reps: telemetry.reps,
-        goalReps: goal,
-        calories: telemetry.calories,
-        avgHeartRate: telemetry.avgHeartRate,
-        peakHeartRate: telemetry.peakHeartRate,
-        avgBreathingRate: telemetry.avgBreathingRate,
-        status: telemetry.reps >= goal ? 'completed' : 'abandoned'
-      };
-
       const saveRes = await API.post('/workouts/end', workoutLog);
       setCompletedSession(saveRes.data);
+    } catch (err) {
+      console.error('Failed to save workout session:', err);
+      // Fallback: show the summary report screen locally even if database saving fails
+      setCompletedSession({
+        ...workoutLog,
+        dbSaveFailed: true
+      });
+    }
 
-      // Trigger Gemini API summary report
+    // Trigger Gemini API summary report
+    try {
       setAiLoading(true);
       const aiRes = await API.post('/ai/summary', {
         exercise: selectedEx.name,
@@ -158,7 +168,8 @@ const WorkoutSession = () => {
       });
       setAiSummary(aiRes.data.summary);
     } catch (err) {
-      console.error('Failed to commit workout logs:', err);
+      console.error('Failed to generate AI posture summary:', err);
+      setAiSummary("### ⚠️ Post-Session Report Offline\n\nWe encountered a network error generating your AI posture summary. Please ensure your backend server is running and has internet connectivity.\n\n* **Check Connection**: Verify your internet connection and local backend configurations.\n* **Local Session Cache**: Your session telemetry was captured successfully, but the AI Coach is temporarily unreachable.");
     } finally {
       setAiLoading(false);
     }
@@ -324,9 +335,21 @@ const WorkoutSession = () => {
         /* Workout Complete Summary Screen */
         <GlassCard className="max-w-2xl mx-auto border-indigo-500/20 p-8 flex flex-col gap-6">
           <div className="flex flex-col items-center gap-3 text-center border-b border-slate-850 pb-6">
-            <CheckCircle className="w-12 h-12 text-emerald-400" />
-            <h3 className="text-2xl font-black text-slate-100">Workout Logged!</h3>
-            <p className="text-xs text-slate-400">Your session metrics have been successfully committed to MongoDB</p>
+            {completedSession.dbSaveFailed ? (
+              <>
+                <ShieldAlert className="w-12 h-12 text-rose-400" />
+                <h3 className="text-2xl font-black text-slate-105">Workout Finished (Not Saved)</h3>
+                <p className="text-xs text-rose-350 bg-rose-500/10 border border-rose-500/20 px-4 py-2 rounded-xl font-medium mt-1">
+                  We could not connect to the database to log your session, but your performance report is ready below.
+                </p>
+              </>
+            ) : (
+              <>
+                <CheckCircle className="w-12 h-12 text-emerald-400" />
+                <h3 className="text-2xl font-black text-slate-100">Workout Logged!</h3>
+                <p className="text-xs text-slate-400">Your session metrics have been successfully committed to MongoDB</p>
+              </>
+            )}
           </div>
 
           {/* Quick Metrics grid */}

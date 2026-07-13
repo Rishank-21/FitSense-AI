@@ -35,6 +35,8 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await API.post('/auth/register', userData);
       localStorage.setItem('fitsense_token', res.data.token);
+      console.log(localStorage.setItem('fitsense_token', res.data.token));
+      console.log(res.data.token);
       setUser(res.data.user);
       setLoading(false);
       return { success: true };
@@ -53,6 +55,8 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await API.post('/auth/login', { email, password });
       localStorage.setItem('fitsense_token', res.data.token);
+      console.log(localStorage.setItem('fitsense_token', res.data.token));
+      console.log(res.data.token);
       setUser(res.data.user);
       setLoading(false);
       return { success: true };
@@ -76,6 +80,7 @@ export const AuthProvider = ({ children }) => {
     setError(null);
     try {
       const res = await API.post('/auth/profile', profileData);
+      console.log(res.data);
       setUser(res.data);
       return { success: true };
     } catch (err) {

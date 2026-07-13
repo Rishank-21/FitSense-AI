@@ -61,21 +61,24 @@ class MockModel {
   async create(docData) {
     const list = this._read();
     const newDoc = {
-      _id: Math.random().toString(36).substring(2, 11),
+      _id: new mongoose.Types.ObjectId().toString(),
       createdAt: new Date(),
       ...docData,
     };
     list.push(newDoc);
     this._write(list);
     
+    // Capture filePath for use in closure
+    const filePath = this.filePath;
+    
     // Add save support for created documents
     newDoc.save = async function() {
-      const dbList = JSON.parse(fs.readFileSync(this.filePath || path.join(dataDir, `${name.toLowerCase()}s.json`), 'utf8'));
+      const dbList = JSON.parse(fs.readFileSync(filePath, 'utf8'));
       const idx = dbList.findIndex(x => x._id === this._id);
       if (idx !== -1) {
         dbList[idx] = { ...this };
         delete dbList[idx].save;
-        fs.writeFileSync(this.filePath, JSON.stringify(dbList, null, 2));
+        fs.writeFileSync(filePath, JSON.stringify(dbList, null, 2));
       }
       return this;
     };
@@ -169,6 +172,7 @@ const mockDb = {
   AIFeedback: new MockModel('AIFeedback'),
 };
 
+
 const connectDB = async () => {
   try {
     mongoose.set('strictQuery', false);
@@ -176,8 +180,9 @@ const connectDB = async () => {
     mongoose.set('bufferCommands', false);
     
     await mongoose.connect(MONGO_URI, {
-      serverSelectionTimeoutMS: 3000,
-      connectTimeoutMS: 3000,
+      // Slightly increase timeouts to avoid premature fallback on slow/local DB
+      serverSelectionTimeoutMS: 5000,
+      connectTimeoutMS: 10000,
     });
     console.log('MongoDB Connected successfully.');
     isUsingFallback = false;

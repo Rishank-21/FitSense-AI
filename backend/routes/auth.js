@@ -3,12 +3,15 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
-const { Model: User } = require('../models/User');
+const UserModel = require("../models/User");
 const auth = require('../middleware/auth');
+
+const getUserModel = () => UserModel.Model;
 
 // GET /api/auth/admin-check - Check if an administrator exists
 router.get('/admin-check', async (req, res) => {
   try {
+    const User = getUserModel();
     const adminExists = await User.findOne({ role: 'admin' });
     res.json({ adminExists: !!adminExists });
   } catch (err) {
@@ -22,8 +25,9 @@ router.post('/register', async (req, res) => {
   const { name, email, password, height, weight, age, gender, fitnessGoal, role } = req.body;
 
   try {
+    const User = getUserModel();
     // Check if user exists
-    let user = await User.findOne({ email });
+    let user = await User.findOne({ email: email });
     if (user) {
       return res.status(400).json({ message: 'User already exists' });
     }
@@ -63,7 +67,7 @@ router.post('/register', async (req, res) => {
       role: savedUser.role
     };
 
-    jwt.sign(
+    const token = jwt.sign(
       payload,
       config.JWT_SECRET,
       { expiresIn: config.JWT_EXPIRY },
@@ -80,11 +84,12 @@ router.post('/register', async (req, res) => {
             age: savedUser.age,
             gender: savedUser.gender,
             fitnessGoal: savedUser.fitnessGoal,
-            role: savedUser.role
-          }
+            role: savedUser.role,
+          },
         });
-      }
+      },
     );
+    console.log(token);
   } catch (err) {
     console.error('Registration error:', err.message);
     res.status(500).json({ message: 'Server error during registration' });
@@ -96,6 +101,7 @@ router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    const User = getUserModel();
     // Check for user
     const user = await User.findOne({ email });
     if (!user) {
@@ -116,7 +122,7 @@ router.post('/login', async (req, res) => {
       role: user.role
     };
 
-    jwt.sign(
+    const token = jwt.sign(
       payload,
       config.JWT_SECRET,
       { expiresIn: config.JWT_EXPIRY },
@@ -133,20 +139,24 @@ router.post('/login', async (req, res) => {
             age: user.age,
             gender: user.gender,
             fitnessGoal: user.fitnessGoal,
-            role: user.role
-          }
+            role: user.role,
+          },
         });
-      }
+      },
     );
+    console.log(token);
   } catch (err) {
     console.error('Login error:', err.message);
     res.status(500).json({ message: 'Server error during login' });
   }
 });
 
+
+
 // Get Logged-in User Profile
 router.get('/profile', auth, async (req, res) => {
   try {
+    const User = getUserModel();
     const user = await User.findById(req.user.id);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -161,11 +171,22 @@ router.get('/profile', auth, async (req, res) => {
   }
 });
 
+// Logout (stateless JWT)
+router.post('/logout', auth, async (req, res) => {
+  try {
+    return res.json({ message: 'Logged out' });
+  } catch (err) {
+    console.error('Logout error:', err.message);
+    return res.status(500).json({ message: 'Server error during logout' });
+  }
+});
+
 // Update User Profile
 router.post('/profile', auth, async (req, res) => {
   const { height, weight, age, gender, fitnessGoal } = req.body;
 
   try {
+    const User = getUserModel();
     let user = await User.findById(req.user.id);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
@@ -196,6 +217,7 @@ router.post('/profile', auth, async (req, res) => {
 // Get All Registered Users (Admin only)
 router.get('/users', auth, async (req, res) => {
   try {
+    const User = getUserModel();
     const adminUser = await User.findById(req.user.id);
     if (!adminUser || adminUser.role !== 'admin') {
       return res.status(403).json({ message: 'Access denied. Admin privileges required.' });
@@ -213,5 +235,7 @@ router.get('/users', auth, async (req, res) => {
     res.status(500).json({ message: 'Server error retrieving user accounts list' });
   }
 });
+
+
 
 module.exports = router;

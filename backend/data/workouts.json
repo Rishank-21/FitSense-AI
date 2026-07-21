@@ -82,5 +82,33 @@
     "peakHeartRate": 76,
     "avgBreathingRate": 17,
     "status": "abandoned"
+  },
+  {
+    "_id": "6a5f19cf72f39bc05ec635d6",
+    "createdAt": "2026-07-21T07:03:43.152Z",
+    "userId": "6a5f1825f04b7676e2a558d2",
+    "exercise": "yoga stability",
+    "duration": 400,
+    "reps": 37,
+    "goalReps": 90,
+    "calories": 15.44,
+    "avgHeartRate": 56,
+    "peakHeartRate": 72,
+    "avgBreathingRate": 11,
+    "status": "abandoned"
+  },
+  {
+    "_id": "6a5f2020b51bcd4db9737d2a",
+    "createdAt": "2026-07-21T07:30:40.764Z",
+    "userId": "6a5f1f1db51bcd4db9737d20",
+    "exercise": "running (sim)",
+    "duration": 103,
+    "reps": 46,
+    "goalReps": 100,
+    "calories": 18.2,
+    "avgHeartRate": 139,
+    "peakHeartRate": 143,
+    "avgBreathingRate": 29,
+    "status": "abandoned"
   }
 ]

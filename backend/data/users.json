@@ -11,5 +11,18 @@
     "gender": "other",
     "fitnessGoal": "maintenance",
     "role": "admin"
+  },
+  {
+    "_id": "6a5f1825f04b7676e2a558d2",
+    "createdAt": "2026-07-21T06:56:37.701Z",
+    "name": "hello world",
+    "email": "hello@world.com",
+    "password": "$2a$10$acrjlHbnH5ByO4BXHOMDLOgfdupv1DGMahi6FJng39/lVERB9PmIG",
+    "height": 175,
+    "weight": 70,
+    "age": 25,
+    "gender": "male",
+    "fitnessGoal": "maintenance",
+    "role": "user"
   }
 ]
